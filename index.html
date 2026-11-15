@@ -39,13 +39,12 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .input{width:100%;padding:12px;font-size:1.1rem;background:#222;color:white;border:2px solid #555;border-radius:8px;margin-bottom:20px;outline:none;}
 .input:focus{border-color:var(--cor-dourado);}
 
-/* Tela 4 - Personagem */
+/* Tela 4 - Escolher Personagem */
 #tela4{background-image:var(--img-fundo);z-index:10;}
 .titulo-pers{font-size:1.8rem;color:var(--cor-dourado);margin-bottom:30px;text-align:center;}
-.opcoes{display:flex;gap:20px;margin-bottom:30px;flex-wrap:wrap;justify-content:center;}
-.pers{width:130px;height:160px;background:var(--cor-fundo-caixa);border:3px solid #555;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;transition:border-color 0.2s;}
-.pers.selecionado{border-color:var(--cor-dourado);box-shadow:0 0 15px var(--cor-dourado);}
-.pers-nome{margin-top:10px;text-align:center;color:white;}
+.opcoes{display:flex;gap:30px;margin-bottom:30px;}
+.opcao{width:150px;height:150px;background:var(--cor-fundo-caixa);border:3px solid #555;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;transition:border-color 0.2s;font-size:1.2rem;font-weight:bold;}
+.opcao.selecionado{border-color:var(--cor-dourado);box-shadow:0 0 15px var(--cor-dourado);}
 .aviso{color:#ff6666;margin-top:15px;display:none;}
 </style>
 </head>
@@ -69,7 +68,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 <!-- Tela 3: Nome -->
 <div id="tela3" class="tela escondida">
   <div class="caixa-form">
-    <h2 class="titulo-form">Digite seu nome de jogador</h2>
+    <h2 class="titulo-form">Digite seu nome</h2>
     <label class="label">Seu nome:</label>
     <input type="text" id="nomeJogador" class="input" placeholder="Digite aqui...">
     <button class="btn" id="btnNome">CONTINUAR</button>
@@ -80,21 +79,19 @@ html,body{width:100%;height:100%;overflow:hidden;}
 <div id="tela4" class="tela escondida">
   <h2 class="titulo-pers">Escolha seu personagem</h2>
   <div class="opcoes">
-    <div class="pers" data-pers="Atacante">
-      <span>🔫</span>
-    </div>
-    <div class="pers" data-pers="Defensor">
-      <span>🛡️</span>
-    </div>
-    <div class="pers" data-pers="Estrategista">
-      <span>🎯</span>
-    </div>
+    <div class="opcao" data-pers="Masculino">Masculino</div>
+    <div class="opcao" data-pers="Feminino">Feminino</div>
   </div>
-  <button class="btn" id="btnJogar">ENTRAR NA PARTIDA</button>
+  <button class="btn" id="btnEntrar">ENTRAR NO LOBBY</button>
   <p class="aviso" id="aviso">Escolha um personagem primeiro!</p>
 </div>
 
 <script>
+function proxima(esconde, mostra){
+  document.getElementById(esconde).classList.add('escondida');
+  document.getElementById(mostra).classList.remove('escondida');
+}
+
 // Carregamento
 const barra = document.getElementById('barra');
 const perc = document.getElementById('perc');
@@ -103,11 +100,6 @@ const carregar = setInterval(()=>{
   p++; barra.style.width = p+'%'; perc.textContent = p+'%';
   if(p>=100){ clearInterval(carregar); proxima('tela1','tela2'); }
 },40);
-
-function proxima(esconde,mostra){
-  document.getElementById(esconde).classList.add('escondida');
-  document.getElementById(mostra).classList.remove('escondida');
-}
 
 // Botões
 document.getElementById('btnComecar').onclick = ()=> proxima('tela2','tela3');
@@ -118,21 +110,21 @@ document.getElementById('btnNome').onclick = ()=>{
   else alert('Digite seu nome primeiro!');
 };
 
-// Personagem
+// Escolher personagem
 let escolhido = null;
-document.querySelectorAll('.pers').forEach(pers=>{
-  pers.onclick = ()=>{
-    document.querySelectorAll('.pers').forEach(x=>x.classList.remove('selecionado'));
-    pers.classList.add('selecionado');
-    escolhido = pers.dataset.pers;
+document.querySelectorAll('.opcao').forEach(op=>{
+  op.onclick = ()=>{
+    document.querySelectorAll('.opcao').forEach(x=>x.classList.remove('selecionado'));
+    op.classList.add('selecionado');
+    escolhido = op.dataset.pers;
     document.getElementById('aviso').style.display = 'none';
   };
 });
 
-document.getElementById('btnJogar').onclick = ()=>{
+document.getElementById('btnEntrar').onclick = ()=>{
   if(escolhido){
     const nome = document.getElementById('nomeJogador').value.trim();
-    alert(`Bem-vindo(a), ${nome}!\nPersonagem: ${escolhido}\nEntrando na partida...`);
+    alert(`Bem-vindo(a), ${nome}!\nPersonagem: ${escolhido}\nEntrando no Lobby...`);
   }else{
     document.getElementById('aviso').style.display = 'block';
   }
