@@ -2,141 +2,193 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Salto Final</title>
 <style>
 :root{
-  --fundo-abertura:url("1794754186995.png");
-  --fundo-lobby:url("1794754186995.png");
+  --fundo-abertura:url("tela-abertura.png");
+  --fundo-lobby:url("lobby-fundo.png");
+  --cor-dourado:#ffc107;
+  --cor-ouro:#ffd700;
+  --cor-diamante:#00d4ff;
+  --cor-botao:#ff9f00;
+  --cor-fundo:rgba(0,0,0,0.75);
 }
-html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:Arial,sans-serif;color:#fff;user-select:none;-webkit-user-select:none}
-.tela{position:fixed;inset:0;background:#000 center/cover no-repeat}
-.sombra{position:absolute;inset:0;background:linear-gradient(to top,#000c 0%,#0000 45%)}
-#abertura{background-image:var(--fundo-abertura)}
-#nome{display:none;background-image:var(--fundo-abertura)}
-#lobby{display:none;background-image:var(--fundo-lobby)}
-#abertura .base{position:absolute;left:0;right:0;bottom:6%;display:flex;flex-direction:column;align-items:center;gap:10px}
-#txt{font-weight:bold;letter-spacing:2px;font-size:clamp(14px,3vw,22px);text-shadow:0 2px 6px #000}
-#carga{width:60%;max-width:520px;height:14px;border-radius:10px;background:#0008;border:2px solid #fff8;overflow:hidden}
-#barra{width:0;height:100%;background:linear-gradient(90deg,#ff6f00,#ffb300)}
-#pct{font-size:clamp(12px,2.5vw,16px);color:#ffe082;text-shadow:0 2px 6px #000}
-button{padding:14px 56px;font-size:clamp(18px,3.5vw,26px);font-weight:bold;border:none;border-radius:10px;background:#ffb300;color:#222;box-shadow:0 5px 0 #a66f00}
-button:active{transform:translateY(4px);box-shadow:0 1px 0 #a66f00}
-button.peq{padding:8px 18px;font-size:14px;background:#000a;color:#fff;box-shadow:none;border:1px solid #fff6}
-.caixa{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#000b;padding:22px 28px;border-radius:14px;display:flex;flex-direction:column;gap:12px;align-items:center;min-width:280px}
-.caixa h2{margin:0;color:#ffb300;letter-spacing:2px;font-size:clamp(18px,3.5vw,24px)}
-#inpNome{width:100%;box-sizing:border-box;padding:12px;font-size:20px;border-radius:8px;border:2px solid #ffb300;background:#111;color:#fff;text-align:center}
-#erro{color:#ff8a80;font-size:14px;height:16px}
-#lobby .topo{position:absolute;left:3%;top:4%;right:3%;display:flex;justify-content:space-between;align-items:center}
-#lobby .titulo{font-size:clamp(20px,4vw,30px);font-weight:bold;color:#ffb300;letter-spacing:3px;text-shadow:0 2px 6px #000}
-.personagem{position:absolute;left:16%;bottom:4%;height:78%;display:flex;flex-direction:column;align-items:center}
-#nomeJog{background:#000a;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:clamp(14px,3vw,20px);margin-bottom:6px;border:1px solid #ffb300}
-.personagem svg{height:100%;filter:drop-shadow(0 8px 10px #000a)}
-#iniciar{position:absolute;right:3%;bottom:6%}
-#aviso{position:absolute;right:3%;bottom:calc(6% + 70px);font-size:14px;color:#cfd8dc;display:none;background:#000a;padding:6px 12px;border-radius:8px}
-#girar{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;text-align:center;font-size:20px;z-index:9;padding:20px}
-@media (orientation:portrait){#girar{display:flex}}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;}
+
+.tela{
+  position:fixed;inset:0;
+  background:#000 no-repeat center/cover;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity 0.5s ease;
+}
+
+/* -- Tela de Abertura / Carregamento -- */
+#abertura{background-image:var(--fundo-abertura);z-index:10;}
+#abertura .sombra{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));}
+#abertura .conteudo{position:relative;z-index:1;text-align:center;color:#fff;padding:20px;}
+#abertura h1{font-size:clamp(36px,10vw,72px);color:var(--cor-dourado);text-shadow:0 0 20px rgba(255,193,7,0.5);margin-bottom:20px;}
+.cx-nome{background:rgba(0,0,0,0.6);border:2px solid var(--cor-dourado);border-radius:12px;padding:25px;margin:15px auto;max-width:400px;width:90%;}
+.cx-nome input{width:100%;padding:14px;font-size:18px;border-radius:8px;border:none;outline:none;text-align:center;margin-bottom:15px;background:#222;color:#fff;}
+button{padding:14px 40px;font-size:20px;font-weight:bold;border:none;border-radius:8px;background:linear-gradient(180deg,#ffc107,#ff9f00);color:#000;cursor:pointer;transition:transform 0.15s, box-shadow 0.15s;box-shadow:0 4px 0 #b37700;}
+button:active{transform:translateY(4px);box-shadow:none;}
+.oculto{display:none !important;opacity:0;pointer-events:none;}
+
+/* -- Tela de Escolha de Personagem -- */
+#escolha{background:linear-gradient(180deg,#1a1a2e,#16213e);z-index:5;}
+#escolha h2{color:var(--cor-dourado);font-size:clamp(24px,6vw,42px);margin-bottom:30px;}
+.personagens{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;padding:20px;}
+.card-personagem{background:rgba(255,255,255,0.05);border:3px solid #444;border-radius:16px;padding:30px;cursor:pointer;transition:all 0.3s ease;text-align:center;min-width:160px;}
+.card-personagem:hover{border-color:var(--cor-dourado);transform:scale(1.05);box-shadow:0 0 25px rgba(255,193,7,0.25);}
+.card-personagem img{width:120px;height:160px;object-fit:contain;margin-bottom:15px;}
+.card-personagem h3{color:#fff;font-size:20px;}
+
+/* -- Lobby Principal -- */
+#lobby{background-image:var(--fundo-lobby);z-index:1;}
+.barra-topo{
+  position:absolute;top:0;left:0;right:0;
+  padding:12px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+  color:#fff;
+}
+.recursos{display:flex;gap:20px;}
+.item-recurso{display:flex;align-items:center;gap:6px;font-weight:bold;}
+.ouro{color:var(--cor-ouro);}
+.diamante{color:var(--cor-diamante);}
+.nome-jogador{font-size:20px;font-weight:bold;color:var(--cor-dourado);text-shadow:0 2px 4px #000;}
+
+/* Personagem no centro do Lobby */
+.personagem-centro{
+  position:absolute;bottom:15%;left:50%;transform:translateX(-50%);
+  text-align:center;
+}
+.personagem-centro img{
+  width:180px;height:auto;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+.personagem-centro .nome{
+  color:#fff;font-size:22px;font-weight:bold;margin-top:8px;
+  text-shadow:0 2px 6px #000;
+}
+
+/* Botões laterais */
+.barra-esquerda{
+  position:absolute;left:15px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:12px;
+}
+.barra-esquerda button{
+  padding:10px 16px;font-size:15px;background:rgba(0,0,0,0.6);
+  color:#fff;border:2px solid #555;box-shadow:none;
+  border-radius:8px;
+}
+.barra-esquerda button:hover{border-color:var(--cor-dourado);background:rgba(0,0,0,0.8);}
+
+.botao-jogar{
+  position:absolute;right:8%;bottom:18%;
+  padding:18px 50px;font-size:24px;
+  background:linear-gradient(180deg,#ffc107,#ff8c00);
+  border-radius:10px;
+}
 </style>
 </head>
 <body>
-<div id="girar">Gire o celular<br>para o modo deitado</div>
 
+<!-- === TELA 1: Abertura / Digitar NOME === -->
 <div id="abertura" class="tela">
   <div class="sombra"></div>
-  <div class="base">
-    <div id="txt">CARREGANDO PARTIDA...</div>
-    <div id="carga"><div id="barra"></div></div>
-    <div id="pct">0%</div>
-    <button id="comecar" style="display:none">COMEÇAR</button>
+  <div class="conteudo">
+    <h1>SALTO FINAL</h1>
+    <div class="cx-nome">
+      <label style="color:#fff;font-size:18px;">Digite seu nome de jogador:</label>
+      <input type="text" id="campoNome" placeholder="Seu nome aqui..." maxlength="12">
+      <button onclick="irParaEscolha()">CONTINUAR</button>
+    </div>
   </div>
 </div>
 
-<div id="nome" class="tela">
-  <div class="sombra"></div>
-  <div class="caixa">
-    <h2>ESCOLHA SEU NOME</h2>
-    <input id="inpNome" type="text" maxlength="12" placeholder="Seu nome" autocomplete="off">
-    <div id="erro"></div>
-    <button id="confirmar">CONFIRMAR</button>
+<!-- === TELA 2: Escolha de Personagem === -->
+<div id="escolha" class="tela oculto">
+  <h2>Escolha seu Personagem</h2>
+  <div class="personagens">
+    <div class="card-personagem" onclick="escolherPersonagem('masculino')">
+      <div style="font-size:80px;color:#4CAF50;margin-bottom:10px;">🧍‍♂️</div>
+      <h3>Masculino</h3>
+    </div>
+    <div class="card-personagem" onclick="escolherPersonagem('feminino')">
+      <div style="font-size:80px;color:#03A9F4;margin-bottom:10px;">🧍‍♀️</div>
+      <h3>Feminino</h3>
+    </div>
   </div>
 </div>
 
-<div id="lobby" class="tela">
-  <div class="sombra"></div>
-  <div class="topo">
-    <div class="titulo">LOBBY</div>
-    <button id="trocar" class="peq">TROCAR NOME</button>
+<!-- === TELA 3: Lobby Principal === -->
+<div id="lobby" class="tela oculto">
+  <!-- Barra de cima: Recursos e Nome -->
+  <div class="barra-topo">
+    <div class="recursos">
+      <div class="item-recurso ouro">💰 2.500</div>
+      <div class="item-recurso diamante">💎 150</div>
+    </div>
+    <div class="nome-jogador" id="mostrarNome">Jogador</div>
+    <div style="font-size:14px;">Saldo Final</div>
   </div>
-  <div class="personagem">
-    <div id="nomeJog"></div>
-    <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="60" cy="212" rx="34" ry="6" fill="#0006"/>
-      <rect x="40" y="130" width="16" height="74" rx="6" fill="#3b4a2b"/>
-      <rect x="64" y="130" width="16" height="74" rx="6" fill="#3b4a2b"/>
-      <rect x="36" y="198" width="22" height="10" rx="4" fill="#222"/>
-      <rect x="62" y="198" width="22" height="10" rx="4" fill="#222"/>
-      <rect x="32" y="68" width="56" height="70" rx="12" fill="#556b2f"/>
-      <rect x="40" y="78" width="40" height="22" rx="4" fill="#44571f"/>
-      <rect x="18" y="72" width="16" height="56" rx="8" fill="#556b2f"/>
-      <rect x="86" y="72" width="16" height="56" rx="8" fill="#556b2f"/>
-      <rect x="22" y="104" width="86" height="9" rx="3" fill="#1c1c1c"/>
-      <rect x="96" y="100" width="18" height="6" rx="2" fill="#1c1c1c"/>
-      <circle cx="60" cy="52" r="20" fill="#e0b48a"/>
-      <path d="M36 50 Q60 14 84 50 L84 44 Q60 6 36 44 Z" fill="#4a5a2a"/>
-      <path d="M38 48 Q60 20 82 48 L82 40 Q60 12 38 40 Z" fill="#4a5a2a"/>
-      <rect x="42" y="46" width="36" height="12" rx="5" fill="#111"/>
-      <rect x="45" y="48" width="30" height="7" rx="3" fill="#ffb300" opacity=".55"/>
-    </svg>
+
+  <!-- Lado esquerdo: Outras opções -->
+  <div class="barra-esquerda">
+    <button>🏪 Loja</button>
+    <button>🎰 Roleta</button>
+    <button>🎫 Passe de Batalha</button>
+    <button>👤 Perfil</button>
+    <button>⚙️ Configurações</button>
   </div>
-  <div id="aviso">Em breve: a partida!</div>
-  <button id="iniciar">INICIAR PARTIDA</button>
+
+  <!-- Personagem no centro embaixo -->
+  <div class="personagem-centro" id="personagemNoLobby">
+    <div style="font-size:100px;" id="iconePersonagem">🧍‍♂️</div>
+    <div class="nome" id="nomePersonagem">Jogador</div>
+  </div>
+
+  <!-- Botão Jogar à direita embaixo -->
+  <button class="botao-jogar">🎮 INICIAR PARTIDA</button>
 </div>
 
 <script>
-var $=function(i){return document.getElementById(i)};
-var barra=$('barra'),txt=$('txt'),pct=$('pct'),comecar=$('comecar'),carga=$('carga'),
-    abertura=$('abertura'),telaNome=$('nome'),lobby=$('lobby'),inp=$('inpNome'),
-    erro=$('erro'),nomeJog=$('nomeJog'),aviso=$('aviso');
+let nomeJogador = "";
+let tipoPersonagem = "";
 
-function mostrar(t){
-  abertura.style.display='none';telaNome.style.display='none';lobby.style.display='none';
-  t.style.display='block';
+function irParaEscolha(){
+  const input = document.getElementById("campoNome");
+  nomeJogador = input.value.trim();
+  if(nomeJogador === ""){
+    alert("Por favor, digite seu nome!");
+    return;
+  }
+  // Salva o nome e vai para escolha
+  document.getElementById("abertura").classList.add("oculto");
+  document.getElementById("escolha").classList.remove("oculto");
 }
 
-var carregou=false,img=new Image();
-img.onload=img.onerror=function(){carregou=true;};
-img.src='1794754186995.png';
-
-var p=0;
-var t=setInterval(function(){
-  p+=Math.random()*2+0.8;
-  if(p>90&&!carregou)p=90;
-  if(p>=100){
-    p=100;clearInterval(t);
-    txt.textContent='PRONTO!';carga.style.display='none';pct.style.display='none';
-    comecar.style.display='block';
+function escolherPersonagem(tipo){
+  tipoPersonagem = tipo;
+  // Atualiza o lobby com os dados
+  document.getElementById("mostrarNome").textContent = nomeJogador;
+  document.getElementById("nomePersonagem").textContent = nomeJogador;
+  
+  if(tipo === "masculino"){
+    document.getElementById("iconePersonagem").textContent = "🧍‍♂️";
+  } else {
+    document.getElementById("iconePersonagem").textContent = "🧍‍♀️";
   }
-  barra.style.width=p+'%';
-  pct.textContent=Math.floor(p)+'%';
-},100);
-
-var salvo='';
-try{salvo=localStorage.getItem('sf_nome')||'';}catch(e){}
-
-comecar.onclick=function(){inp.value=salvo;mostrar(telaNome);};
-
-$('confirmar').onclick=function(){
-  var n=inp.value.trim();
-  if(n.length<2){erro.textContent='Escolha um nome com 2 letras ou mais';return;}
-  erro.textContent='';
-  salvo=n;
-  try{localStorage.setItem('sf_nome',n);}catch(e){}
-  nomeJog.textContent=n;
-  mostrar(lobby);
-};
-
-$('trocar').onclick=function(){inp.value=salvo;mostrar(telaNome);};
-$('iniciar').onclick=function(){aviso.style.display='block';};
+  
+  // Vai para o Lobby
+  document.getElementById("escolha").classList.add("oculto");
+  document.getElementById("lobby").classList.remove("oculto");
+}
 </script>
+
 </body>
 </html>
