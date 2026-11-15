@@ -12,6 +12,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:Arial
 #txt{font-weight:bold;letter-spacing:2px;font-size:clamp(14px,3vw,22px);text-shadow:0 2px 6px #000}
 #carga{width:60%;max-width:520px;height:14px;border-radius:10px;background:#0008;border:2px solid #fff8;overflow:hidden}
 #barra{width:0;height:100%;background:linear-gradient(90deg,#ff6f00,#ffb300)}
+#pct{font-size:clamp(12px,2.5vw,16px);color:#ffe082;text-shadow:0 2px 6px #000}
 button{padding:14px 56px;font-size:clamp(18px,3.5vw,26px);font-weight:bold;border:none;border-radius:10px;background:#ffb300;color:#222;box-shadow:0 5px 0 #a66f00}
 button:active{transform:translateY(4px);box-shadow:0 1px 0 #a66f00}
 #lobby{display:none}
@@ -30,6 +31,7 @@ button:active{transform:translateY(4px);box-shadow:0 1px 0 #a66f00}
   <div class="base">
     <div id="txt">CARREGANDO PARTIDA...</div>
     <div id="carga"><div id="barra"></div></div>
+    <div id="pct">0%</div>
     <button id="comecar" style="display:none">COMEÇAR</button>
   </div>
 </div>
@@ -45,15 +47,31 @@ button:active{transform:translateY(4px);box-shadow:0 1px 0 #a66f00}
 
 <script>
 var barra=document.getElementById('barra'),txt=document.getElementById('txt'),
-    comecar=document.getElementById('comecar'),carga=document.getElementById('carga'),
-    abertura=document.getElementById('abertura'),lobby=document.getElementById('lobby'),
-    iniciar=document.getElementById('iniciar'),aviso=document.getElementById('aviso');
+    pct=document.getElementById('pct'),comecar=document.getElementById('comecar'),
+    carga=document.getElementById('carga'),abertura=document.getElementById('abertura'),
+    lobby=document.getElementById('lobby'),iniciar=document.getElementById('iniciar'),
+    aviso=document.getElementById('aviso');
+
+var carregou=false;
+var img=new Image();
+img.onload=img.onerror=function(){carregou=true;};
+img.src='1794754186995.png';
+
 var p=0;
 var t=setInterval(function(){
-  p+=Math.random()*7+2;
-  if(p>=100){p=100;clearInterval(t);txt.textContent='PRONTO!';carga.style.display='none';comecar.style.display='block';}
+  p+=Math.random()*2+0.8;
+  if(p>90&&!carregou)p=90;
+  if(p>=100){
+    p=100;clearInterval(t);
+    txt.textContent='PRONTO!';
+    carga.style.display='none';
+    pct.style.display='none';
+    comecar.style.display='block';
+  }
   barra.style.width=p+'%';
-},120);
+  pct.textContent=Math.floor(p)+'%';
+},100);
+
 comecar.onclick=function(){abertura.style.display='none';lobby.style.display='block';};
 iniciar.onclick=function(){aviso.style.display='block';};
 </script>
