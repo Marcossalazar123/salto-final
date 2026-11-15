@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Salto Final</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:Arial,sans-serif;color:#fff;user-select:none;-webkit-user-select:none}
+.tela{position:fixed;inset:0;background:#000 url("1794754186995.png") center/cover no-repeat}
+.sombra{position:absolute;inset:0;background:linear-gradient(to top,#000c 0%,#0000 45%)}
+#abertura .base{position:absolute;left:0;right:0;bottom:6%;display:flex;flex-direction:column;align-items:center;gap:10px}
+#txt{font-weight:bold;letter-spacing:2px;font-size:clamp(14px,3vw,22px);text-shadow:0 2px 6px #000}
+#carga{width:60%;max-width:520px;height:14px;border-radius:10px;background:#0008;border:2px solid #fff8;overflow:hidden}
+#barra{width:0;height:100%;background:linear-gradient(90deg,#ff6f00,#ffb300)}
+button{padding:14px 56px;font-size:clamp(18px,3.5vw,26px);font-weight:bold;border:none;border-radius:10px;background:#ffb300;color:#222;box-shadow:0 5px 0 #a66f00}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 #a66f00}
+#lobby{display:none}
+#lobby .painel{position:absolute;right:4%;bottom:8%;display:flex;flex-direction:column;gap:12px;align-items:stretch;background:#000a;padding:18px;border-radius:14px;min-width:220px;text-align:center}
+#lobby h2{margin:0 0 6px;font-size:clamp(18px,3.5vw,26px);color:#ffb300;letter-spacing:2px}
+#aviso{display:none;font-size:14px;color:#cfd8dc}
+#girar{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;text-align:center;font-size:20px;z-index:9;padding:20px}
+@media (orientation:portrait){#girar{display:flex}}
+</style>
+</head>
+<body>
+<div id="girar">Gire o celular<br>para o modo deitado</div>
+
+<div id="abertura" class="tela">
+  <div class="sombra"></div>
+  <div class="base">
+    <div id="txt">CARREGANDO PARTIDA...</div>
+    <div id="carga"><div id="barra"></div></div>
+    <button id="comecar" style="display:none">COMEÇAR</button>
+  </div>
+</div>
+
+<div id="lobby" class="tela">
+  <div class="sombra"></div>
+  <div class="painel">
+    <h2>LOBBY</h2>
+    <button id="iniciar">INICIAR PARTIDA</button>
+    <div id="aviso">Em breve: a partida!</div>
+  </div>
+</div>
+
+<script>
+var barra=document.getElementById('barra'),txt=document.getElementById('txt'),
+    comecar=document.getElementById('comecar'),carga=document.getElementById('carga'),
+    abertura=document.getElementById('abertura'),lobby=document.getElementById('lobby'),
+    iniciar=document.getElementById('iniciar'),aviso=document.getElementById('aviso');
+var p=0;
+var t=setInterval(function(){
+  p+=Math.random()*7+2;
+  if(p>=100){p=100;clearInterval(t);txt.textContent='PRONTO!';carga.style.display='none';comecar.style.display='block';}
+  barra.style.width=p+'%';
+},120);
+comecar.onclick=function(){abertura.style.display='none';lobby.style.display='block';};
+iniciar.onclick=function(){aviso.style.display='block';};
+</script>
+</body>
+</html>
