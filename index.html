@@ -8,6 +8,7 @@
 :root{
   --img-carregando:url("1794754186995.png");
   --img-fundo:url("1794757547687.png");
+  --img-lobby:url("lobby-fundo.png");
   --cor-dourado:#ffc107;
   --cor-botao:#ff9f00;
   --cor-fundo-caixa:rgba(0,0,0,0.75);
@@ -46,6 +47,11 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .opcao{width:150px;height:150px;background:var(--cor-fundo-caixa);border:3px solid #555;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;transition:border-color 0.2s;font-size:1.2rem;font-weight:bold;}
 .opcao.selecionado{border-color:var(--cor-dourado);box-shadow:0 0 15px var(--cor-dourado);}
 .aviso{color:#ff6666;margin-top:15px;display:none;}
+
+/* Tela 5 - Lobby */
+#tela5{background-image:var(--img-lobby);z-index:5;}
+.personagem-lobby{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem;color:white;font-weight:bold;text-shadow:2px 2px 6px rgba(0,0,0,0.9);}
+.btn-iniciar{position:absolute;bottom:40px;right:40px;padding:15px 40px;font-size:1.3rem;background:linear-gradient(to bottom,var(--cor-dourado),var(--cor-botao));color:#000;font-weight:bold;border:none;border-radius:10px;cursor:pointer;border:2px solid #000;}
 </style>
 </head>
 <body>
@@ -86,7 +92,16 @@ html,body{width:100%;height:100%;overflow:hidden;}
   <p class="aviso" id="aviso">Escolha um personagem primeiro!</p>
 </div>
 
+<!-- Tela 5: Lobby -->
+<div id="tela5" class="tela escondida">
+  <div class="personagem-lobby" id="personagemLobby"></div>
+  <button class="btn-iniciar">INICIAR PARTIDA</button>
+</div>
+
 <script>
+let nomeJogador = "";
+let tipoPersonagem = "";
+
 function proxima(esconde, mostra){
   document.getElementById(esconde).classList.add('escondida');
   document.getElementById(mostra).classList.remove('escondida');
@@ -105,26 +120,26 @@ const carregar = setInterval(()=>{
 document.getElementById('btnComecar').onclick = ()=> proxima('tela2','tela3');
 
 document.getElementById('btnNome').onclick = ()=>{
-  const nome = document.getElementById('nomeJogador').value.trim();
-  if(nome) proxima('tela3','tela4');
+  nomeJogador = document.getElementById('nomeJogador').value.trim();
+  if(nomeJogador) proxima('tela3','tela4');
   else alert('Digite seu nome primeiro!');
 };
 
 // Escolher personagem
-let escolhido = null;
 document.querySelectorAll('.opcao').forEach(op=>{
   op.onclick = ()=>{
     document.querySelectorAll('.opcao').forEach(x=>x.classList.remove('selecionado'));
     op.classList.add('selecionado');
-    escolhido = op.dataset.pers;
+    tipoPersonagem = op.dataset.pers;
     document.getElementById('aviso').style.display = 'none';
   };
 });
 
+// Entrar no Lobby
 document.getElementById('btnEntrar').onclick = ()=>{
-  if(escolhido){
-    const nome = document.getElementById('nomeJogador').value.trim();
-    alert(`Bem-vindo(a), ${nome}!\nPersonagem: ${escolhido}\nEntrando no Lobby...`);
+  if(tipoPersonagem){
+    document.getElementById('personagemLobby').textContent = tipoPersonagem;
+    proxima('tela4','tela5');
   }else{
     document.getElementById('aviso').style.display = 'block';
   }
